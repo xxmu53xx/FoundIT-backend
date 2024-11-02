@@ -7,8 +7,9 @@ public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false, unique = true)
     private Long userID;
-
+    @Column(nullable = false, unique = true)
     private String schoolEmail;
 
     private String schoolId;
@@ -17,8 +18,14 @@ public class UserEntity {
   
     private String bio;	
     private int currentPoints;
+    public UserEntity() {
+    	
+    }
+    public UserEntity(String email, String password) {
+        this.schoolEmail = email;
+        this.password = password;
+    }
 
-    // Getters and Setters
     public Long getUserID() {
         return userID;
     }

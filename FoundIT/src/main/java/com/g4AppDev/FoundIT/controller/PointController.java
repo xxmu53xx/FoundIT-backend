@@ -1,7 +1,6 @@
 package com.g4AppDev.FoundIT.controller;
 
 import com.g4AppDev.FoundIT.entity.Point;
-import com.g4AppDev.FoundIT.entity.UserEntity;
 import com.g4AppDev.FoundIT.service.PointService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

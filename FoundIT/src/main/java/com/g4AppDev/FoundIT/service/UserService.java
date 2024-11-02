@@ -18,22 +18,18 @@ public class UserService {
     @Autowired
     private UserRepo userRepository;
 
-    // Get all users
     public List<UserEntity> getAllUsers() {
         return userRepository.findAll();
     }
 
-    // Get user by ID
     public UserEntity getUserById(Long id) {
         return userRepository.findById(id).orElse(null);
     }
 
-    // Post user
     public UserEntity createUser(UserEntity user) {
         return userRepository.save(user);
     }
 
-    // Put user details
     @SuppressWarnings("finally")
     public UserEntity updateUser(Long id, UserEntity userDetails) {
     	UserEntity user = new UserEntity();
@@ -51,7 +47,6 @@ public class UserService {
         }
     }
 
-    // Delete user
     public String deleteUser(Long id) {
         String msg;
 
@@ -66,8 +61,8 @@ public class UserService {
     
     public List<UserEntity> getLatestUsers(int count) {
         return userRepository.findAll().stream()
-            .sorted((u1, u2) -> Long.compare(u2.getUserID(), u1.getUserID())) // Sort by User ID descending
-            .limit(count) // Limit to the specified count
+            .sorted((u1, u2) -> Long.compare(u2.getUserID(), u1.getUserID()))
+            .limit(count) 
             .collect(Collectors.toList());
     }
     

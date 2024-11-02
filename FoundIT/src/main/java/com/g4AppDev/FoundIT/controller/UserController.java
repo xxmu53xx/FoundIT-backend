@@ -38,11 +38,13 @@ public class UserController {
         return "User deleted successfully";
     }
     
+    
+   //first 5 new users added (pde ni maalter para mahimo og first 3)
     @GetMapping("/getLatestUsers")
     public List<UserEntity> getLatestUsers(@RequestParam(defaultValue = "5") int count) {
-        return userService.getLatestUsers(count); // Fetch the latest users based on the count
+        return userService.getLatestUsers(count);
     }
-    
+     //para ni sa counting kun pila ka users naa sa list
     @GetMapping("/getCountUsers")
     public ResponseEntity<Map<String, Long>> getEntityCounts() {
         Map<String, Long> counts = new HashMap<>();
