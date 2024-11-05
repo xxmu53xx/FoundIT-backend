@@ -18,7 +18,7 @@ public class PointController {
     @Autowired
     private PointService pointService;
 
-    // CREATE
+    // CREATE sss
     @PostMapping("/postPoints")
     public ResponseEntity<Point> createPoint(@RequestBody Point point) {
         Point savedPoint = pointService.createPoint(point.getPointsEarned(), point.getDateEarned());
