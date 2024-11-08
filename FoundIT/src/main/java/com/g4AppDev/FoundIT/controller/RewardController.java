@@ -18,21 +18,18 @@ public class RewardController {
     @Autowired
     private RewardService rewardService;
     
-    // CREATE
     @PostMapping("/postRewards")
     public ResponseEntity<RewardEntity> createReward(@RequestBody RewardEntity reward) {
         RewardEntity savedReward = rewardService.createReward(reward);
         return new ResponseEntity<>(savedReward, HttpStatus.CREATED);
     }
     
-    // READ ALL
     @GetMapping("/getAllRewards")
     public ResponseEntity<List<RewardEntity>> getAllRewards() {
         List<RewardEntity> rewards = rewardService.getAllRewards();
         return new ResponseEntity<>(rewards, HttpStatus.OK);
     }
     
-    // READ ONE
     @GetMapping("/{id}")
     public ResponseEntity<RewardEntity> getRewardById(@PathVariable Long id) {
         Optional<RewardEntity> reward = rewardService.getRewardById(id);
@@ -40,7 +37,6 @@ public class RewardController {
                     .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
     
-    // UPDATE
     @PutMapping("/putReward/{id}")
     public ResponseEntity<RewardEntity> updateReward(@PathVariable Long id, @RequestBody RewardEntity reward) {
         if (!rewardService.getRewardById(id).isPresent()) {
@@ -51,7 +47,6 @@ public class RewardController {
         return new ResponseEntity<>(updatedReward, HttpStatus.OK);
     }
     
-    // DELETE
     @DeleteMapping("/deleteRewards/{id}")
     public ResponseEntity<Void> deleteReward(@PathVariable Long id) {
         if (!rewardService.getRewardById(id).isPresent()) {
@@ -63,6 +58,6 @@ public class RewardController {
     
     @GetMapping("/getLatestRewards")
     public List<RewardEntity> getLatestRewards(@RequestParam(defaultValue = "5") int count) {
-        return rewardService.getLatestReward(count); // Fetch the latest users based on the count
+        return rewardService.getLatestReward(count); 
     }
 }

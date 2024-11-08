@@ -18,21 +18,17 @@ public class PointController {
     @Autowired
     private PointService pointService;
 
-    // CREATE sss
-    @PostMapping("/postPoints")
-    public ResponseEntity<Point> createPoint(@RequestBody Point point) {
-        Point savedPoint = pointService.createPoint(point.getPointsEarned(), point.getDateEarned());
-        return new ResponseEntity<>(savedPoint, HttpStatus.CREATED);
+    @PostMapping("/postPoints" )
+    public Point createPoint(@RequestBody Point point) {
+      return pointService.createPoint(point);
     }
 
-    // READ ALL
     @GetMapping("/getAllPoints")
     public ResponseEntity<List<Point>> getAllPoints() {
         List<Point> points = pointService.getAllPoints();
         return new ResponseEntity<>(points, HttpStatus.OK);
     }
 
-    // READ ONE
     @GetMapping("/{id}")
     public ResponseEntity<Point> getPointById(@PathVariable Long id) {
         Optional<Point> point = pointService.getPointById(id);
@@ -40,18 +36,11 @@ public class PointController {
                     .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    // UPDATE
-    @PutMapping("/putPoint/{id}")
-    public ResponseEntity<Point> updatePoint(@PathVariable Long id, @RequestBody Point point) {
-        if (!pointService.getPointById(id).isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        point.setPointId(id);
-        Point updatedPoint = pointService.updatePoint(point);
-        return new ResponseEntity<>(updatedPoint, HttpStatus.OK);
+    @PutMapping("/putPoint/")
+    public Point updatePoint(@RequestParam Long id, @RequestBody Point point) {
+        return pointService.updatePoint(id,point);
     }
 
-    // DELETE
     @DeleteMapping("/deletePoints/{id}")
     public ResponseEntity<Void> deletePoint(@PathVariable Long id) {
         if (!pointService.getPointById(id).isPresent()) {
@@ -61,7 +50,6 @@ public class PointController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    // GET LATEST POINTS
     @GetMapping("/getLatestPoints")
     public List<Point> getLatestPoints(@RequestParam(defaultValue = "5") int count) {
         return pointService.getLatestPoints(count);

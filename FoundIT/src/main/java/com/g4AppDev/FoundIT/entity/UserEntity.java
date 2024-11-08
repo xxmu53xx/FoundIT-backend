@@ -1,31 +1,46 @@
 package com.g4AppDev.FoundIT.entity;
 
 import jakarta.persistence.*;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
+@Table(name = "user-entity")
 public class UserEntity {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, unique = true)
-    private Long userID;
-    @Column(nullable = false, unique = true)
+    @Column(name="user_id")
+    private Long userID; // Primary Key ni
+    
     private String schoolEmail;
-
     private String schoolId;
-
     private String password;
-  
-    private String bio;	
-    private int currentPoints;
-    public UserEntity() {
-    	
-    }
-    public UserEntity(String email, String password) {
-        this.schoolEmail = email;
-        this.password = password;
-    }
+    private String bio;
+    private int current_points;
 
+    
+    //priority (mogana nani ay nani hilabti)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.EAGER)
+    
+    private List<Point> points;
+    
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Item> items;
+    
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.EAGER)
+  @JsonManagedReference
+    private List<RewardEntity> rewards;
+
+    public UserEntity(Long userID) {
+        this.userID = userID;
+    }
+    
+    public UserEntity() {}
     public Long getUserID() {
         return userID;
     }
@@ -38,16 +53,16 @@ public class UserEntity {
         return schoolEmail;
     }
 
-    public void setSchoolEmail(String schoolEmail) {
-        this.schoolEmail = schoolEmail;
+    public void setSchoolEmail(String school_email) {
+        this.schoolEmail = school_email;
     }
 
     public String getSchoolId() {
         return schoolId;
     }
 
-    public void setSchoolId(String schoolId) {
-        this.schoolId = schoolId;
+    public void setSchoolId(String school_id) {
+        this.schoolId = school_id;
     }
 
     public String getPassword() {
@@ -67,10 +82,46 @@ public class UserEntity {
     }
 
     public int getCurrentPoints() {
-        return currentPoints;
+        return current_points;
     }
 
-    public void setCurrentPoints(int currentPoints) {
-        this.currentPoints = currentPoints;
+    public void setCurrentPoints(int current_points) {
+        this.current_points = current_points;
+    }
+ 
+    public List<Point> getPoints() {
+        return points;
+    }
+
+    public void setPoints(List<Point> points) {
+        this.points = points;
+    }
+   
+    public List<Item> getItems() {
+        return items;
+    }
+  
+    public void setItems(List<Item> items) {
+        this.items = items;
+    }
+
+    public List<RewardEntity> getRewards() {
+        return rewards;
+    }
+
+    public void setRewards(List<RewardEntity> rewards) {
+        this.rewards = rewards;
+    }
+
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "userID=" + userID +
+                ", school_email='" + schoolEmail + '\'' +
+                ", school_id='" + schoolId + '\'' +
+                ", password='" + password + '\'' +
+                ", bio='" + bio + '\'' +
+                ", current_points=" + current_points +
+                '}';
     }
 }

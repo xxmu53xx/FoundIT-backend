@@ -12,7 +12,6 @@ private String email;
 @Column(nullable = false)
 private String password;
 
-// Constructors, getters, and setters
 public Admin() {}
 
 public Admin(String email, String password) {

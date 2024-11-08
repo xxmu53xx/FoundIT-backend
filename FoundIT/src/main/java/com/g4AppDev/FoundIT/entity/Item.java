@@ -2,43 +2,74 @@ package com.g4AppDev.FoundIT.entity;
 
 import jakarta.persistence.*;
 import java.util.Date;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
+@Table(name = "item")
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long itemId;
+    private Long itemId;
+    
+    
     private String description;
     private Date dateLostOrFound;
-    private int registeredBy;
     private String location;
     private String status;
-    // Constructors
+
+    // Many-to-one relationship with UserEntity, representing the user who registered the item
+    @ManyToOne(optional = false)
+ 
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
+    private UserEntity user;  // Renamed from registeredByy for clarity
+/*
+    @ManyToMany(mappedBy = "items")
+    private List<Point> points;*/
+
     public Item() {}
 
-    public Item(String description, Date dateLostOrFound, int registeredBy, String location,String status) {
+    public Item(String description, Date dateLostOrFound, UserEntity user, String location, String status) {
         this.description = description;
         this.dateLostOrFound = dateLostOrFound;
-        this.registeredBy = registeredBy;
+        this.user = user;
         this.location = location;
-        this.status=status;
+        this.status = status;
+    }
+   
+        
+ public Item(String description, Date dateLostOrFound, String location, String status) {
+        this.description = description;
+        this.dateLostOrFound = dateLostOrFound;
+      
+        this.location = location;
+        this.status = status;
+    }
+   
+    public UserEntity getUser() {
+        return user;
     }
 
-    // Getters and Setters
-    // Add these for all fields
-    public Long  getItemID() {
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
+    public Long getItemID() {
         return itemId;
     }
-    
+
     public String getStatus() {
-    	return this.status;
-    }
-    
-    public void setStatus(String status) {
-    	this.status=status;
+        return this.status;
     }
 
-    public void setItemId(Long  itemId) {
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setItemId(Long itemId) {
         this.itemId = itemId;
     }
 
@@ -57,15 +88,7 @@ public class Item {
     public void setDateLostOrFound(Date dateLostOrFound) {
         this.dateLostOrFound = dateLostOrFound;
     }
-
-    public int getRegisteredBy() {
-        return registeredBy;
-    }
-
-    public void setRegisteredBy(int registeredBy) {
-        this.registeredBy = registeredBy;
-    }
-
+    
     public String getLocation() {
         return location;
     }
@@ -74,16 +97,16 @@ public class Item {
         this.location = location;
     }
 
+
     @Override
     public String toString() {
         return "Item{" +
-                "itemId=" + itemId +	
+                "itemId=" + itemId +
                 ", description='" + description + '\'' +
                 ", dateLostOrFound=" + dateLostOrFound +
-                ", registeredBy=" + registeredBy +
+                ", registeredBy=" + (user != null ? user.getUserID() : null) + // Prevent full serialization
                 ", location='" + location + '\'' +
+                ", status='" + status + '\'' +
                 '}';
     }
-
-   
 }

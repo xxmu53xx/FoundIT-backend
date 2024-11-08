@@ -2,8 +2,12 @@ package com.g4AppDev.FoundIT.entity;
 
 import jakarta.persistence.*;
 import java.util.Date;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
+@Table(name = "points")
 public class Point {
 
     @Id
@@ -12,14 +16,33 @@ public class Point {
 
     private int pointsEarned;
     private Date dateEarned;
+    
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
+    private UserEntity user;
 
+    @ManyToMany
+    @JoinTable(
+        name = "point_item",
+        joinColumns = @JoinColumn(name = "point_id"),
+        inverseJoinColumns = @JoinColumn(name = "item_id")
+    )
+    private List<Item> items;
   
     public Point() {}
 
+    // Updated constructor to include UserEntity
+    public Point(int pointsEarned, Date dateEarned, UserEntity user) {
+        this.pointsEarned = pointsEarned;
+        this.dateEarned = dateEarned;
+        this.user = user; // Set the user reference
+    }
+    
     public Point(int pointsEarned, Date dateEarned) {
         this.pointsEarned = pointsEarned;
         this.dateEarned = dateEarned;
-   
+    
     }
 
     // Getters and Setters
@@ -47,16 +70,14 @@ public class Point {
         this.dateEarned = dateEarned;
     }
 
-    @Override
-    public String toString() {
-        return "Point{" +
-                "pointId=" + pointId +
-                ", pointsEarned=" + pointsEarned +
-                ", dateEarned=" + dateEarned +
-               
-                '}';
+    public UserEntity getUser() {
+        return user;
     }
-    /*
+
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
+
     @Override
     public String toString() {
         return "Point{" +
@@ -65,5 +86,5 @@ public class Point {
                 ", dateEarned=" + dateEarned +
                 ", user=" + (user != null ? user.getUserID() : null) +
                 '}';
-    }*/
+    }
 }

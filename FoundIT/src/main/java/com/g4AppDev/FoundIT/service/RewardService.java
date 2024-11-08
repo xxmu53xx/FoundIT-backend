@@ -16,35 +16,31 @@ public class RewardService {
     @Autowired
     private RewardRepository rewardRepository;
     
-    // Create
+    
     public RewardEntity createReward(RewardEntity reward) {
         return rewardRepository.save(reward);
     }
     
-    // Read all
     public List<RewardEntity> getAllRewards() {
         return rewardRepository.findAll();
     }
     
-    // Read one
     public Optional<RewardEntity> getRewardById(Long id) {
         return rewardRepository.findById(id);
     }
     
-    // Update
     public RewardEntity updateReward(RewardEntity reward) {
         return rewardRepository.save(reward);
     }
     
-    // Delete
     public void deleteReward(Long id) {
         rewardRepository.deleteById(id);
     }
     
     public List<RewardEntity> getLatestReward(int count) {
         return rewardRepository.findAll().stream()
-            .sorted((u1, u2) -> Long.compare(u2.getRewardId(), u1.getRewardId())) // Sort by User ID descending
-            .limit(count) // Limit to the specified count
+            .sorted((u1, u2) -> Long.compare(u2.getRewardId(), u1.getRewardId()))
+            .limit(count)
             .collect(Collectors.toList());
     }
 }

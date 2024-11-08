@@ -1,5 +1,7 @@
 package com.g4AppDev.FoundIT.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -12,8 +14,11 @@ public class RewardEntity {
     private Integer pointsRequired;
     private String rewardName;
     private String rewardType;
-
-    // Getters and Setters
+    
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
+    private UserEntity user;
     public Long getRewardId() {
         return rewardId;
     }

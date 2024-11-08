@@ -31,13 +31,13 @@ public class ItemController {
 
     
     @PutMapping("/putItemDetails/{id}")
-    public Item putItemDetails(@PathVariable int id, @RequestBody Item itemDetails) {
+    public Item putItemDetails(@PathVariable Long id, @RequestBody Item itemDetails) {
         return itemService.updateItem(id, itemDetails);
     }
 
     
     @DeleteMapping("/deleteItemDetails/{id}")
-    public String deleteItem(@PathVariable int id) {
+    public String deleteItem(@PathVariable Long id) {
         return itemService.deleteItem(id);
     }
     @GetMapping("/getLatestItems")

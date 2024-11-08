@@ -20,7 +20,7 @@ public class ItemService {
         return itemRepository.findAll();
     }
 
-    public Optional<Item> getItemById(int id) {
+    public Optional<Item> getItemById(Long id) {
         return itemRepository.findById(id);
     }
 
@@ -30,13 +30,13 @@ public class ItemService {
 
    
     @SuppressWarnings("finally")
-    public Item updateItem(int id, Item itemDetails) {
+    public Item updateItem(Long id, Item itemDetails) {
         Item item = new Item();
         try {
             item = itemRepository.findById(id).orElseThrow(() -> new RuntimeException("Item " + id + " not found"));
             item.setDescription(itemDetails.getDescription());
             item.setDateLostOrFound(itemDetails.getDateLostOrFound());
-            item.setRegisteredBy(itemDetails.getRegisteredBy());
+            item.setUser(itemDetails.getUser());
             item.setLocation(itemDetails.getLocation());
             item.setStatus(itemDetails.getStatus());
         } catch (NoSuchElementException nex) {
@@ -46,8 +46,7 @@ public class ItemService {
         }
     }
 
-    // Delete item
-    public String deleteItem(int id) {
+    public String deleteItem(Long id) {
         String msg;
 
         if (itemRepository.existsById(id)) {
@@ -60,8 +59,8 @@ public class ItemService {
     }
     public List<Item> getLatestItems(int count) {
         return itemRepository.findAll().stream()
-                .sorted((i1, i2) -> Long.compare(i2.getItemID(), i1.getItemID())) // Sort by Item ID descending
-                .limit(count) // Limit to the specified count
+                .sorted((i1, i2) -> Long.compare(i2.getItemID(), i1.getItemID())) 
+                .limit(count) 
                 .collect(Collectors.toList());
     }
 }
