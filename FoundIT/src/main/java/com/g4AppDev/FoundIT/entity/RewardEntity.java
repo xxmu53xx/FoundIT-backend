@@ -19,6 +19,14 @@ public class RewardEntity {
     @JoinColumn(name = "user_id", nullable = false)
     @JsonBackReference
     private UserEntity user;
+    
+    public void setUser(UserEntity user) {
+    	this.user=user;
+    }
+    
+    public UserEntity getUser() {
+    	return this.user;
+    }		
     public Long getRewardId() {
         return rewardId;
     }

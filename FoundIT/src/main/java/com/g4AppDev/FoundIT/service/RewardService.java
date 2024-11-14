@@ -3,6 +3,8 @@ package com.g4AppDev.FoundIT.service;
 import com.g4AppDev.FoundIT.entity.RewardEntity;
 import com.g4AppDev.FoundIT.entity.UserEntity;
 import com.g4AppDev.FoundIT.repository.RewardRepository;
+import com.g4AppDev.FoundIT.repository.UserRepo;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +17,7 @@ public class RewardService {
     
     @Autowired
     private RewardRepository rewardRepository;
-    
-    
+    private UserRepo userRepository; 
     public RewardEntity createReward(RewardEntity reward) {
         return rewardRepository.save(reward);
     }
@@ -29,8 +30,11 @@ public class RewardService {
         return rewardRepository.findById(id);
     }
     
-    public RewardEntity updateReward(RewardEntity reward) {
-        return rewardRepository.save(reward);
+    public RewardEntity updateReward(RewardEntity rewardDetails) {
+        if (rewardDetails.getUser() == null) {
+            throw new RuntimeException("User not specified for reward");
+        }
+        return rewardRepository.save(rewardDetails);
     }
     
     public void deleteReward(Long id) {

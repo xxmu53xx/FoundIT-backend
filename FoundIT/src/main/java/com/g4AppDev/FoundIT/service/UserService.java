@@ -33,19 +33,21 @@ public class UserService {
 
     @SuppressWarnings("finally")
     public UserEntity updateUser(Long id, UserEntity userDetails) {
-    	UserEntity user = new UserEntity();
-        try {
-            user = userRepository.findById(id).get();
-            user.setSchoolEmail(userDetails.getSchoolEmail());
-            user.setSchoolId(userDetails.getSchoolId());
-            user.setPassword(userDetails.getPassword());
-            user.setBio(userDetails.getBio());
-            user.setCurrentPoints(userDetails.getCurrentPoints());
-        } catch (NoSuchElementException nex) {
-            throw new RuntimeException("User " + id + " not found");
-        } finally {
-            return userRepository.save(user);
-        }
+    	  try {
+    	        UserEntity user = userRepository.findById(id)
+    	                .orElseThrow(() -> new RuntimeException("User " + id + " not found"));
+    	        
+    	        user.setSchoolEmail(userDetails.getSchoolEmail());
+    	        user.setSchoolId(userDetails.getSchoolId());
+    	        user.setPassword(userDetails.getPassword());
+    	        user.setBio(userDetails.getBio());
+    	        user.setCurrentPoints(userDetails.getCurrentPoints());
+    	        
+    	        return userRepository.save(user);
+    	        
+    	    } catch (NoSuchElementException nex) {
+    	        throw new RuntimeException("User " + id + " not found");
+    	    }
     }
 
     public String deleteUser(Long id) {
