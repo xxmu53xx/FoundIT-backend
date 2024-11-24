@@ -17,7 +17,14 @@ public class RewardService {
     
     @Autowired
     private RewardRepository rewardRepository;
+    
     private UserRepo userRepository; 
+    
+    @Autowired
+    public RewardService(RewardRepository rewardRepository, UserRepo userRepository) {
+        this.rewardRepository = rewardRepository;
+        this.userRepository = userRepository;
+    }
     public RewardEntity createReward(RewardEntity reward) {
         return rewardRepository.save(reward);
     }
@@ -30,11 +37,21 @@ public class RewardService {
         return rewardRepository.findById(id);
     }
     
-    public RewardEntity updateReward(RewardEntity rewardDetails) {
-        if (rewardDetails.getUser() == null) {
-            throw new RuntimeException("User not specified for reward");
-        }
-        return rewardRepository.save(rewardDetails);
+    public RewardEntity updateReward(Long rewardId, RewardEntity updatedReward) {
+    	RewardEntity existingReward = rewardRepository.findById(rewardId)
+                .orElseThrow(() -> new IllegalArgumentException("Reward not found with id: " + rewardId));
+
+        // Fetch the existing user
+        UserEntity existingUser = userRepository.findById(updatedReward.getUser().getUserID())
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + updatedReward.getUser().getUserID()));
+
+        // Update reward fields
+        existingReward.setPointsRequired(updatedReward.getPointsRequired());
+        existingReward.setRewardName(updatedReward.getRewardName());
+        existingReward.setRewardType(updatedReward.getRewardType());
+        existingReward.setUser(existingUser);
+
+        return rewardRepository.save(existingReward);
     }
     
     public void deleteReward(Long id) {
@@ -46,5 +63,9 @@ public class RewardService {
             .sorted((u1, u2) -> Long.compare(u2.getRewardId(), u1.getRewardId()))
             .limit(count)
             .collect(Collectors.toList());
+    }
+    
+    public long getRewardCount() {
+        return rewardRepository.count();
     }
 }

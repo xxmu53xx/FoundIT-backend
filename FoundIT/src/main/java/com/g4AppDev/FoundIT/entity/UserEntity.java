@@ -21,16 +21,17 @@ public class UserEntity {
     private String password;
     private String bio;
     private int current_points;
-
-    
+    private boolean isAdmin;
+    private boolean isLogged;
     //priority (mogana nani ay nani hilabti)
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.EAGER)
     
     private List<Point> points;
     
+    /*
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference
-    private List<Item> items;
+    private List<Item> items;*/
     
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.EAGER)
   @JsonManagedReference
@@ -40,11 +41,24 @@ public class UserEntity {
         this.userID = userID;
     }
     
+    public boolean getIsAdmin() {
+    	return this.isAdmin;   }
+    
+    public void setIsAdmin(boolean isAdmin) {
+    	this.isAdmin=isAdmin;
+    }
+    
     public UserEntity() {}
     public Long getUserID() {
         return userID;
     }
-
+    
+    public boolean getIsLogged() {
+    	return this.isLogged;    }
+    
+    public void setIsLogged(boolean isLogged) {
+    	this.isLogged=isLogged;
+    }
     public void setUserID(Long userID) {
         this.userID = userID;
     }
@@ -97,6 +111,7 @@ public class UserEntity {
         this.points = points;
     }
    
+    /*
     public List<Item> getItems() {
         return items;
     }
@@ -104,7 +119,7 @@ public class UserEntity {
     public void setItems(List<Item> items) {
         this.items = items;
     }
-
+*/
     public List<RewardEntity> getRewards() {
         return rewards;
     }

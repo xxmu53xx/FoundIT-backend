@@ -18,7 +18,7 @@ public class RewardEntity {
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonBackReference
-    private UserEntity user;
+    private UserEntity user;	
     
     public void setUser(UserEntity user) {
     	this.user=user;

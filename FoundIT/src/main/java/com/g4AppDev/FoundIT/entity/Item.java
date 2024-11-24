@@ -20,14 +20,19 @@ public class Item {
     private Date dateLostOrFound;
     private String location;
     private String status;
-
+    
+    @Lob  // Marks the field for large text storage (for large base64 data)
+    private String image;
     // Many-to-one relationship with UserEntity, representing the user who registered the item
-    @ManyToOne(optional = false)
+    
+    
+  /*	  @ManyToOne(optional = false)
  
+    
     @JoinColumn(name = "user_id", nullable = false)
     @JsonBackReference
     private UserEntity user;  // Renamed from registeredByy for clarity
-/*
+/
     @ManyToMany(mappedBy = "items")
     private List<Point> points;*/
 
@@ -36,7 +41,7 @@ public class Item {
     public Item(String description, Date dateLostOrFound, UserEntity user, String location, String status) {
         this.description = description;
         this.dateLostOrFound = dateLostOrFound;
-        this.user = user;
+      //  this.user = user;
         this.location = location;
         this.status = status;
     }
@@ -50,13 +55,14 @@ public class Item {
         this.status = status;
     }
    
+ /*
     public UserEntity getUser() {
         return user;
     }
 
     public void setUser(UserEntity user) {
         this.user = user;
-    }
+    }*/
     public Long getItemID() {
         return itemId;
     }
@@ -71,6 +77,14 @@ public class Item {
 
     public void setItemId(Long itemId) {
         this.itemId = itemId;
+    }
+    
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getDescription() {
@@ -104,7 +118,7 @@ public class Item {
                 "itemId=" + itemId +
                 ", description='" + description + '\'' +
                 ", dateLostOrFound=" + dateLostOrFound +
-                ", registeredBy=" + (user != null ? user.getUserID() : null) + // Prevent full serialization
+             //   ", registeredBy=" + (user != null ? user.getUserID() : null) + // Prevent full serialization
                 ", location='" + location + '\'' +
                 ", status='" + status + '\'' +
                 '}';

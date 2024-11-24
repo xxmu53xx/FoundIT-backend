@@ -36,9 +36,10 @@ public class ItemService {
             item = itemRepository.findById(id).orElseThrow(() -> new RuntimeException("Item " + id + " not found"));
             item.setDescription(itemDetails.getDescription());
             item.setDateLostOrFound(itemDetails.getDateLostOrFound());
-            item.setUser(itemDetails.getUser());
+         //   item.setUser(itemDetails.getUser());
             item.setLocation(itemDetails.getLocation());
             item.setStatus(itemDetails.getStatus());
+            item.setImage(itemDetails.getImage());
         } catch (NoSuchElementException nex) {
             throw new RuntimeException("Item " + id + " not found");
         } finally {
@@ -62,5 +63,13 @@ public class ItemService {
                 .sorted((i1, i2) -> Long.compare(i2.getItemID(), i1.getItemID())) 
                 .limit(count) 
                 .collect(Collectors.toList());
+    }
+    
+    public long getItemCount() {
+        return itemRepository.count();
+    }
+    
+    public long countFoundItems() {
+    	 return itemRepository.countByStatus("Found"); // Assuming "state" is the field that stores the status (e.g., "Found" or "Lost")
     }
 }

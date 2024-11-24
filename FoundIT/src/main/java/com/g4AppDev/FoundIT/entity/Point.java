@@ -17,7 +17,8 @@ public class Point {
     private int pointsEarned;
     private Date dateEarned;
     
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    
     @JoinColumn(name = "user_id", nullable = false)
     @JsonBackReference
     private UserEntity user;
@@ -57,7 +58,11 @@ public class Point {
     public int getPointsEarned() {
         return pointsEarned;
     }
-
+    @PreRemove
+    private void removePointFromUser() {
+        if (user != null) {
+            user.getPoints().remove(this);
+        }}
     public void setPointsEarned(int pointsEarned) {
         this.pointsEarned = pointsEarned;
     }

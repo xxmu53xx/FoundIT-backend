@@ -9,7 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -18,7 +20,7 @@ public class RewardController {
 
     @Autowired
     private RewardService rewardService;
-
+    private RewardEntity rewardEntity;
     @Autowired
     private UserService userService; // Add UserService for user retrieval
     
@@ -41,28 +43,14 @@ public class RewardController {
                     .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PutMapping("/putReward/{id}")
-    public ResponseEntity<RewardEntity> updateReward(@PathVariable Long id, @RequestBody RewardEntity reward) {
-        Optional<RewardEntity> existingReward = rewardService.getRewardById(id);
-        if (!existingReward.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        // Ensure user is set in the RewardEntity
-        Long userId = reward.getUser().getUserID(); // Assuming the user is provided in the request
-        UserEntity user = userService.getUserById(userId); // Fetch user from database
-        
-        if (user == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // If user not found, return bad request
-        }
-
-        reward.setUser(user); // Set the user in reward
-
-        reward.setRewardId(id); // Set the ID of the reward
-        RewardEntity updatedReward = rewardService.updateReward(reward); // Save the updated reward
-        return new ResponseEntity<>(updatedReward, HttpStatus.OK);
+    @PutMapping("/putReward/{rewardId}")
+    public ResponseEntity<?> updateReward(
+            @PathVariable Long rewardId,
+            @RequestBody RewardEntity reward) {
+        // Call the service with the correct object
+        RewardEntity updatedReward = rewardService.updateReward(rewardId, reward);
+        return ResponseEntity.ok(updatedReward);
     }
-
     @DeleteMapping("/deleteRewards/{id}")
     public ResponseEntity<Void> deleteReward(@PathVariable Long id) {
         if (!rewardService.getRewardById(id).isPresent()) {
@@ -75,5 +63,11 @@ public class RewardController {
     @GetMapping("/getLatestRewards")
     public List<RewardEntity> getLatestRewards(@RequestParam(defaultValue = "5") int count) {
         return rewardService.getLatestReward(count);
+    }
+    @GetMapping("/getCountRewards")
+    public ResponseEntity<Map<String, Long>> getEntityCounts() {
+        Map<String, Long> counts = new HashMap<>();
+        counts.put("user_count", rewardService.getRewardCount());
+        return ResponseEntity.ok(counts);
     }
 }

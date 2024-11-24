@@ -41,8 +41,9 @@ public class UserService {
     	        user.setSchoolId(userDetails.getSchoolId());
     	        user.setPassword(userDetails.getPassword());
     	        user.setBio(userDetails.getBio());
+    	        user.setIsAdmin(userDetails.getIsAdmin());
     	        user.setCurrentPoints(userDetails.getCurrentPoints());
-    	        
+    	        user.setIsAdmin(userDetails.getIsAdmin());
     	        return userRepository.save(user);
     	        
     	    } catch (NoSuchElementException nex) {
@@ -71,5 +72,9 @@ public class UserService {
     
     public long getUserCount() {
         return userRepository.count();
+    }
+    
+    public UserEntity findUserByEmail(String email) {
+        return userRepository.findBySchoolEmail(email);
     }
 }

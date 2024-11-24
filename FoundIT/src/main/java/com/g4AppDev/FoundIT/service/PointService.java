@@ -5,6 +5,9 @@ import com.g4AppDev.FoundIT.entity.UserEntity;
 import com.g4AppDev.FoundIT.repository.PointRepository;
 import com.g4AppDev.FoundIT.repository.UserRepo;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +26,11 @@ public class PointService {
     	 Point point = new Point(pointsEarned, dateEarned);
         return pointRepository.save(point);
     }*/
-    
+    @Autowired
+    private EntityManager entityManager;
+    public boolean existsById(Long id) {
+        return pointRepository.existsById(id);
+    }
     public Point createPoint(Point point) {
    
     	return pointRepository.save(point);
@@ -51,15 +58,40 @@ public class PointService {
         return pointRepository.save(point);
         
     }
-
+/*
     public void deletePoint(Long id) {
-        pointRepository.deleteById(id);
+
+    }*/
+    public void deletePoint(Long id) {
+        Point point = pointRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Point not found with id: " + id));
+        
+        UserEntity user = point.getUser();
+        if (user != null) {
+            // Update user's current points if needed
+            user.setCurrentPoints(user.getCurrentPoints() - point.getPointsEarned());
+            
+            // Remove the point from user's points list
+            user.getPoints().remove(point);
+            
+            // Merge the updated user
+            entityManager.merge(user);
+        }
+        
+        // Delete the point
+        pointRepository.delete(point);
+        entityManager.flush();
     }
+
 
     public List<Point> getLatestPoints(int count) {
         return pointRepository.findAll().stream()
             .sorted((p1, p2) -> p2.getDateEarned().compareTo(p1.getDateEarned()))
             .limit(count)
             .collect(Collectors.toList());
+    }
+    
+    public long getPointCount() {
+        return pointRepository.count();
     }
 }
