@@ -18,7 +18,7 @@ import com.g4AppDev.FoundIT.service.UserService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -53,7 +53,10 @@ public class UserController {
     public UserEntity putUserDetails(@PathVariable Long id, @RequestBody UserEntity userDetails) {
         return userService.updateUser(id, userDetails);
     }
-
+    @GetMapping("/getLeaderboard")
+    public List<UserEntity> getLeaderboard() {
+        return userService.getTopUsersByPoints();
+    }
     @DeleteMapping("/deleteUserDetails/{id}")
     public String deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
@@ -72,21 +75,22 @@ public class UserController {
         return ResponseEntity.ok(counts);
     }
 
-    /* MasBetter ni siya pero dli mo generate og token for some reason
+    /*
+   //MasBetter ni siya pero dli mo generate og token for some reason
     @GetMapping("/getCurrentUser")
     @PreAuthorize("permitAll()")
     public ResponseEntity<UserEntity> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         if (authentication != null && authentication.isAuthenticated()) {
-            String username = authentication.getName();  // Get the username or email of the authenticated user
-            UserEntity user = userRepository.findBySchoolEmail(username);  // Find the user by their email
-            
-           
+            String username = authentication.getName();
+            System.out.println("Authenticated username: " + username);  // Log the username
+            UserEntity user = userRepository.findBySchoolEmail(username);
+            if (user != null) {
+                return ResponseEntity.ok(user);
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Return 404 if user is not found
         }
-
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);  // Return 401 if no authenticated user
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
     }*/
-    
     
 }

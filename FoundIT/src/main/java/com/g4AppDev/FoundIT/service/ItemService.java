@@ -1,7 +1,12 @@
 package com.g4AppDev.FoundIT.service;
 
 import com.g4AppDev.FoundIT.entity.Item;
+import com.g4AppDev.FoundIT.entity.UserEntity;
 import com.g4AppDev.FoundIT.repository.ItemRepository;
+import com.g4AppDev.FoundIT.repository.UserRepo;
+
+import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +20,9 @@ import java.util.stream.Collectors;
 public class ItemService {
     @Autowired
     private ItemRepository itemRepository;
-
+   
+    @Autowired
+    private UserRepo userRepository;
     public List<Item> getAllItems() {
         return itemRepository.findAll();
     }
@@ -31,22 +38,25 @@ public class ItemService {
    
     @SuppressWarnings("finally")
     public Item updateItem(Long id, Item itemDetails) {
-        Item item = new Item();
-        try {
-            item = itemRepository.findById(id).orElseThrow(() -> new RuntimeException("Item " + id + " not found"));
-            item.setDescription(itemDetails.getDescription());
-            item.setDateLostOrFound(itemDetails.getDateLostOrFound());
-         //   item.setUser(itemDetails.getUser());
-            item.setLocation(itemDetails.getLocation());
-            item.setStatus(itemDetails.getStatus());
-            item.setImage(itemDetails.getImage());
-        } catch (NoSuchElementException nex) {
-            throw new RuntimeException("Item " + id + " not found");
-        } finally {
-            return itemRepository.save(item);
-        }
-    }
+        Item item = itemRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Item not found"));
 
+        // Update basic fields
+        item.setDescription(itemDetails.getDescription());
+        item.setDateLostOrFound(itemDetails.getDateLostOrFound());
+        item.setLocation(itemDetails.getLocation());
+        item.setStatus(itemDetails.getStatus());
+        item.setImage(itemDetails.getImage());
+
+        // Update user association if provided
+        if (itemDetails.getUser() != null && itemDetails.getUser().getUserID() != null) {
+            UserEntity newUser = userRepository.findById(itemDetails.getUser().getUserID())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+            item.setUser(newUser);
+        }
+
+        return itemRepository.save(item);
+    }
     public String deleteItem(Long id) {
         String msg;
 

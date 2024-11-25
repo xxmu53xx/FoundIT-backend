@@ -50,7 +50,7 @@ public class RewardService {
         existingReward.setRewardName(updatedReward.getRewardName());
         existingReward.setRewardType(updatedReward.getRewardType());
         existingReward.setUser(existingUser);
-
+        existingReward.setisClaimed(updatedReward.getisClaimed());
         return rewardRepository.save(existingReward);
     }
     

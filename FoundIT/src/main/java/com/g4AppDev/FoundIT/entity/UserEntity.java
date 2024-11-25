@@ -28,10 +28,10 @@ public class UserEntity {
     
     private List<Point> points;
     
-    /*
+    
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference
-    private List<Item> items;*/
+    private List<Item> items;
     
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.EAGER)
   @JsonManagedReference
@@ -70,7 +70,7 @@ public class UserEntity {
     public void setSchoolEmail(String school_email) {
         this.schoolEmail = school_email;
     }
-
+    
     public String getSchoolId() {
         return schoolId;
     }
@@ -111,7 +111,7 @@ public class UserEntity {
         this.points = points;
     }
    
-    /*
+    
     public List<Item> getItems() {
         return items;
     }
@@ -119,7 +119,7 @@ public class UserEntity {
     public void setItems(List<Item> items) {
         this.items = items;
     }
-*/
+
     public List<RewardEntity> getRewards() {
         return rewards;
     }

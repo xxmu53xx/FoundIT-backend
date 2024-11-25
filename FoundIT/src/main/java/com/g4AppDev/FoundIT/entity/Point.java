@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-
 @Entity
 @Table(name = "points")
 public class Point {
@@ -16,9 +15,8 @@ public class Point {
 
     private int pointsEarned;
     private Date dateEarned;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
-    
     @JoinColumn(name = "user_id", nullable = false)
     @JsonBackReference
     private UserEntity user;
@@ -30,23 +28,21 @@ public class Point {
         inverseJoinColumns = @JoinColumn(name = "item_id")
     )
     private List<Item> items;
-  
+
     public Point() {}
 
-    // Updated constructor to include UserEntity
     public Point(int pointsEarned, Date dateEarned, UserEntity user) {
         this.pointsEarned = pointsEarned;
         this.dateEarned = dateEarned;
-        this.user = user; // Set the user reference
+        this.user = user;
     }
-    
+
     public Point(int pointsEarned, Date dateEarned) {
         this.pointsEarned = pointsEarned;
         this.dateEarned = dateEarned;
-    
     }
 
-    // Getters and Setters
+  
     public Long getPointId() {
         return pointId;
     }
@@ -58,11 +54,7 @@ public class Point {
     public int getPointsEarned() {
         return pointsEarned;
     }
-    @PreRemove
-    private void removePointFromUser() {
-        if (user != null) {
-            user.getPoints().remove(this);
-        }}
+
     public void setPointsEarned(int pointsEarned) {
         this.pointsEarned = pointsEarned;
     }
@@ -81,6 +73,22 @@ public class Point {
 
     public void setUser(UserEntity user) {
         this.user = user;
+    }
+    
+    private int CounterPoints;
+   
+    @PreRemove
+    private void handleRemoval() {
+        if (user != null) {
+            user.getPoints().remove(this);
+            CounterPoints=this.pointsEarned*2;
+          
+            int updatedPoints = user.getCurrentPoints() - (this.pointsEarned-CounterPoints);
+            if(updatedPoints<=0) {
+            	updatedPoints=0;
+            }
+            user.setCurrentPoints(Math.max(0, updatedPoints));
+        }
     }
 
     @Override

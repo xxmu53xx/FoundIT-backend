@@ -14,6 +14,7 @@ public class RewardEntity {
     private Integer pointsRequired;
     private String rewardName;
     private String rewardType;
+    private boolean isClaimed;
     
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
@@ -22,6 +23,13 @@ public class RewardEntity {
     
     public void setUser(UserEntity user) {
     	this.user=user;
+    }
+    public void setisClaimed(boolean isClaimed) {
+    	this.isClaimed=isClaimed;
+    }
+    
+    public boolean getisClaimed() {
+    	return this.isClaimed;
     }
     
     public UserEntity getUser() {
