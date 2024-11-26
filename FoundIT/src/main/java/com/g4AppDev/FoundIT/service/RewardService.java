@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,6 +27,7 @@ public class RewardService {
         this.userRepository = userRepository;
     }
     public RewardEntity createReward(RewardEntity reward) {
+    	reward.setcouponCode(generateCouponCode());
         return rewardRepository.save(reward);
     }
     
@@ -64,7 +66,13 @@ public class RewardService {
             .limit(count)
             .collect(Collectors.toList());
     }
-    
+    private String generateCouponCode() {
+        Random random = new Random();
+        // Generate a random number between 10000 and 99999
+        int coupon = 10000 + random.nextInt(90000);
+        return String.valueOf(coupon);
+    }
+
     public long getRewardCount() {
         return rewardRepository.count();
     }

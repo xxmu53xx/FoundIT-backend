@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.g4AppDev.FoundIT.entity.Item;
+import com.g4AppDev.FoundIT.repository.ItemRepository;
 import com.g4AppDev.FoundIT.service.ItemService;
 
 import java.util.HashMap;
@@ -18,7 +19,7 @@ public class ItemController {
 // example
     @Autowired
     private ItemService itemService;
-
+    private ItemRepository itemRepository;
     @GetMapping("/getAllItems")
     public List<Item> getAllItems() {
         return itemService.getAllItems();
@@ -59,5 +60,7 @@ public class ItemController {
         response.put("found_item_count", foundItemCount);
         return ResponseEntity.ok(response);
     }
+    
+
     
 }

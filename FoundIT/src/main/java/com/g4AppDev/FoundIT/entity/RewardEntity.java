@@ -15,7 +15,7 @@ public class RewardEntity {
     private String rewardName;
     private String rewardType;
     private boolean isClaimed;
-    
+    private String couponCode;
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonBackReference
@@ -23,6 +23,13 @@ public class RewardEntity {
     
     public void setUser(UserEntity user) {
     	this.user=user;
+    }
+    public String getcouponCode() {
+    	return this.couponCode;
+    }
+    
+    public void setcouponCode(String couponCode) {
+    	this.couponCode=couponCode;
     }
     public void setisClaimed(boolean isClaimed) {
     	this.isClaimed=isClaimed;

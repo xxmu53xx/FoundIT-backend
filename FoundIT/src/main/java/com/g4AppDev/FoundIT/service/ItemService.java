@@ -10,8 +10,10 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -82,4 +84,6 @@ public class ItemService {
     public long countFoundItems() {
     	 return itemRepository.countByStatus("Found"); // Assuming "state" is the field that stores the status (e.g., "Found" or "Lost")
     }
+    
+    
 }
