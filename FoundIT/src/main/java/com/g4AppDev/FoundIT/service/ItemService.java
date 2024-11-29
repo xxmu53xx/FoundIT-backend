@@ -29,10 +29,11 @@ public class ItemService {
         return itemRepository.findAll();
     }
 
-    public Optional<Item> getItemById(Long id) {
-        return itemRepository.findById(id);
+    public Item getItemById(Long id) {
+        // Use Optional to safely get the item or throw an exception if not found
+        return itemRepository.findById(id)
+                .orElse(null); // Return null if not found, or you can throw an exception
     }
-
     public Item saveItem(Item item) {
         return itemRepository.save(item);
     }
@@ -49,6 +50,8 @@ public class ItemService {
         item.setLocation(itemDetails.getLocation());
         item.setStatus(itemDetails.getStatus());
         item.setImage(itemDetails.getImage());
+        item.setisClaimed(itemDetails.getisClaimed());
+        item.setIsVerified(itemDetails.getIsVerified());
 
         // Update user association if provided
         if (itemDetails.getUser() != null && itemDetails.getUser().getUserID() != null) {
@@ -82,7 +85,11 @@ public class ItemService {
     }
     
     public long countFoundItems() {
-    	 return itemRepository.countByStatus("Found"); // Assuming "state" is the field that stores the status (e.g., "Found" or "Lost")
+    	 return itemRepository.countByStatusAndIsVerified("Found");// Assuming "state" is the field that stores the status (e.g., "Found" or "Lost")
+    }
+    
+    public long countLostItem() {
+    	 return itemRepository.countByStatusAndIsVerified("Lost");
     }
     
     

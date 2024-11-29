@@ -1,5 +1,6 @@
 package com.g4AppDev.FoundIT.controller;
 
+import com.g4AppDev.FoundIT.entity.Item;
 import com.g4AppDev.FoundIT.entity.RewardEntity;
 import com.g4AppDev.FoundIT.entity.UserEntity;
 import com.g4AppDev.FoundIT.service.RewardService;
@@ -23,13 +24,18 @@ public class RewardController {
     private RewardEntity rewardEntity;
     @Autowired
     private UserService userService; // Add UserService for user retrieval
-    
+    		
     @PostMapping("/postRewards")
     public ResponseEntity<RewardEntity> createReward(@RequestBody RewardEntity reward) {
         RewardEntity savedReward = rewardService.createReward(reward);
         return new ResponseEntity<>(savedReward, HttpStatus.CREATED);
     }
-
+    
+    /*
+    @PostMapping("/postRewards")
+    public RewardEntity createReward(@RequestBody RewardEntity reward) {
+    	return rewardService.createReward(reward);
+    }*/
     @GetMapping("/getAllRewards")
     public ResponseEntity<List<RewardEntity>> getAllRewards() {
         List<RewardEntity> rewards = rewardService.getAllRewards();
@@ -51,15 +57,24 @@ public class RewardController {
         RewardEntity updatedReward = rewardService.updateReward(rewardId, reward);
         return ResponseEntity.ok(updatedReward);
     }
+    
+    
+    
+    /*
+    public void deleteReward(Long id) {
+        RewardEntity reward = rewardRepository.findById(id)
+                                .orElseThrow(() -> new RuntimeException("Reward not found"));
+        reward.setUser(null); // Detach from user if needed
+        rewardRepository.delete(reward);
+    } */
+    
     @DeleteMapping("/deleteRewards/{id}")
-    public ResponseEntity<Void> deleteReward(@PathVariable Long id) {
-        if (!rewardService.getRewardById(id).isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        rewardService.deleteReward(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public String deleteRewards(@PathVariable Long id) {
+    	return rewardService.deleteReward(id);
     }
 
+    
+   
     @GetMapping("/getLatestRewards")
     public List<RewardEntity> getLatestRewards(@RequestParam(defaultValue = "5") int count) {
         return rewardService.getLatestReward(count);

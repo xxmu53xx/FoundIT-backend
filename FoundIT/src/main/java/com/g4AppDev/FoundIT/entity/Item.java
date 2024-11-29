@@ -19,9 +19,14 @@ public class Item {
     private String description;
     private Date dateLostOrFound;
     private String location;
+    
+    
+    //for filthering purposes
     private String status;
-    //private boolean isClaimed
-    	
+    private boolean isClaimed;
+    private boolean isVerified;
+    
+    //for image, for better visualization
     @Lob  // Marks the field for large text storage (for large base64 data)
     private String image;
     // Many-to-one relationship with UserEntity, representing the user who registered the item
@@ -53,8 +58,13 @@ public class Item {
         this.location = location;
         this.status = status;
     }
-   
+ public boolean getisClaimed() {
+	 return this.isClaimed;
+ }
  
+ public void setisClaimed(boolean isClaimed) {
+	 this.isClaimed=isClaimed;
+ }
     public UserEntity getUser() {
         return user;
     }
@@ -64,6 +74,13 @@ public class Item {
     }
     public Long getItemID() {
         return itemId;
+    }
+    public boolean getIsVerified() {
+    	return this.isVerified;
+    }
+    
+    public void setIsVerified(boolean isVerified) {
+    	this.isVerified=isVerified;
     }
 
     public String getStatus() {

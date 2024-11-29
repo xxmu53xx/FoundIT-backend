@@ -11,4 +11,7 @@ import org.springframework.data.repository.query.Param;
 public interface ItemRepository extends JpaRepository<Item, Long> {
 	long countByStatus(String status);
 	
+	@Query("SELECT COUNT(i) FROM Item i WHERE i.status = :status AND i.isVerified = true")
+    long countByStatusAndIsVerified(@Param("status") String status);
+	
 }

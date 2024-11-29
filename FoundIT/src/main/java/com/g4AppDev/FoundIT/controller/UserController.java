@@ -39,6 +39,16 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Return 404 if not found
         }
     }
+    
+    @GetMapping("/getUserByEmail/{email}") // Corrected mapping
+    public ResponseEntity<UserEntity> getUserByEmail(@PathVariable String email) { // Corrected method name
+        UserEntity user = userService.getUserByEmail(email);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.notFound().build(); // Return 404 if user not found
+        }
+    }
     @GetMapping("/getAllUsers")
     public List<UserEntity> getAllUsers() {
         return userService.getAllUsers();

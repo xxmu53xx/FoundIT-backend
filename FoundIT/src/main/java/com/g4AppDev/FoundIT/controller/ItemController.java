@@ -1,10 +1,12 @@
 package com.g4AppDev.FoundIT.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.g4AppDev.FoundIT.entity.Item;
+import com.g4AppDev.FoundIT.entity.UserEntity;
 import com.g4AppDev.FoundIT.repository.ItemRepository;
 import com.g4AppDev.FoundIT.service.ItemService;
 
@@ -20,12 +22,23 @@ public class ItemController {
     @Autowired
     private ItemService itemService;
     private ItemRepository itemRepository;
+    private Item item;
+    
     @GetMapping("/getAllItems")
     public List<Item> getAllItems() {
         return itemService.getAllItems();
     }
-
-    
+   
+    @GetMapping("/getItemDetails/{id}")
+    public ResponseEntity<Item> getItemById(@PathVariable Long id) {
+        Item item = itemService.getItemById(id); // Use the service to fetch the item
+        if (item != null) {
+            return ResponseEntity.ok(item); // Return the item if found
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Return 404 if not found
+        }
+    }
+ 
     @PostMapping("/postItem")
     public Item createItem(@RequestBody Item item) {
         return itemService.saveItem(item);
@@ -60,7 +73,13 @@ public class ItemController {
         response.put("found_item_count", foundItemCount);
         return ResponseEntity.ok(response);
     }
-    
 
+    @GetMapping("/getLostItemCount")
+    public ResponseEntity<Map<String, Long>> getLostItemCount() {
+        long foundItemCount = itemService.countLostItem();
+        Map<String, Long> response = new HashMap<>();
+        response.put("lost_item_count", foundItemCount);
+        return ResponseEntity.ok(response);
+    }
     
 }

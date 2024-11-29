@@ -5,6 +5,8 @@ import com.g4AppDev.FoundIT.entity.UserEntity;
 import com.g4AppDev.FoundIT.repository.RewardRepository;
 import com.g4AppDev.FoundIT.repository.UserRepo;
 
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +20,7 @@ public class RewardService {
     
     @Autowired
     private RewardRepository rewardRepository;
-    
+    private RewardEntity reward;
     private UserRepo userRepository; 
     
     @Autowired
@@ -27,9 +29,10 @@ public class RewardService {
         this.userRepository = userRepository;
     }
     public RewardEntity createReward(RewardEntity reward) {
-    	reward.setcouponCode(generateCouponCode());
+reward.setcouponCode(generateCouponCode());
         return rewardRepository.save(reward);
     }
+    
     
     public List<RewardEntity> getAllRewards() {
         return rewardRepository.findAll();
@@ -53,11 +56,41 @@ public class RewardService {
         existingReward.setRewardType(updatedReward.getRewardType());
         existingReward.setUser(existingUser);
         existingReward.setisClaimed(updatedReward.getisClaimed());
+        existingReward.setImage(updatedReward.getImage());
         return rewardRepository.save(existingReward);
     }
     
+    
+    /*
     public void deleteReward(Long id) {
+    	reward.setUser(null); 
         rewardRepository.deleteById(id);
+    }*/
+    
+    @Transactional
+    public String deleteReward(Long id) {
+        Optional<RewardEntity> rewardOptional = rewardRepository.findById(id);
+        
+        if (rewardOptional.isPresent()) {
+            RewardEntity reward = rewardOptional.get();
+            
+            // Remove the user association
+            reward.removeUser();
+            
+            // Detach the reward from any associated user
+            if (reward.getUser() != null) {
+                UserEntity user = reward.getUser();
+                user.getRewards().remove(reward);
+                userRepository.save(user);
+            }
+            
+            // Delete the reward
+            rewardRepository.delete(reward);
+            
+            return "Reward record successfully deleted";
+        } else {
+            return id + " NOT found!";
+        }
     }
     
     public List<RewardEntity> getLatestReward(int count) {

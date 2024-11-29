@@ -22,7 +22,9 @@ public class UserService {
     public List<UserEntity> getAllUsers() {
         return userRepository.findAll();
     }
-    
+    public UserEntity getUserByEmail(String email) {
+        return userRepository.findBySchoolEmail(email);
+    }
     public List<UserEntity> getTopUsersByPoints() {
         return userRepository.findTop5ByOrderByPointsDesc();
     }

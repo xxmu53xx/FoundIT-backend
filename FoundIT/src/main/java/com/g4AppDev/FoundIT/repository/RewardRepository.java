@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RewardRepository extends JpaRepository<RewardEntity, Long> {
+	long deleteById(long id);
 }
