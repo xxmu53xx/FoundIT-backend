@@ -23,6 +23,9 @@ public class UserEntity {
     private int current_points;
     private boolean isAdmin;
     private boolean isLogged;
+    
+    @Lob
+    private String image;
     //priority (mogana nani ay nani hilabti)
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.EAGER)
     
@@ -126,6 +129,14 @@ public class UserEntity {
 
     public void setRewards(List<RewardEntity> rewards) {
         this.rewards = rewards;
+    }
+    
+    public void setImage(String image) {
+    	this.image=image;
+    }
+    
+    public String getImage() {
+    	return this.image;
     }
 
     @Override

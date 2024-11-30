@@ -26,7 +26,7 @@ public class UserService {
         return userRepository.findBySchoolEmail(email);
     }
     public List<UserEntity> getTopUsersByPoints() {
-        return userRepository.findTop5ByOrderByPointsDesc();
+        return userRepository.findTop5Bycurrent_points();
     }
     public UserEntity getUserById(Long id) {
         return userRepository.findById(id).orElse(null);
@@ -49,6 +49,7 @@ public class UserService {
     	        user.setIsAdmin(userDetails.getIsAdmin());
     	        user.setCurrentPoints(userDetails.getCurrentPoints());
     	        user.setIsAdmin(userDetails.getIsAdmin());
+    	        user.setImage(userDetails.getImage());
     	        return userRepository.save(user);
     	        
     	    } catch (NoSuchElementException nex) {
