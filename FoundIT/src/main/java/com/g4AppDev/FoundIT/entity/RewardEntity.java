@@ -18,7 +18,7 @@ public class RewardEntity {
     //for display purposes
     //record keeping for admin and disable display for users if true
     private boolean isClaimed;
-    
+    private boolean isUsed;
     //for reward
     private String couponCode;
     
@@ -32,6 +32,14 @@ public class RewardEntity {
     
     public void setUser(UserEntity user) {
     	this.user=user;
+    }
+    
+    public boolean getisUsed() {
+    	return this.isUsed;
+    }
+    
+    public void setisUsed(boolean isUsed) {
+    	this.isUsed=isUsed;
     }
     public String getcouponCode() {
     	return this.couponCode;
