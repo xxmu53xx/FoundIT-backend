@@ -3,6 +3,7 @@ package com.g4AppDev.FoundIT.controller;
 import com.g4AppDev.FoundIT.entity.Item;
 import com.g4AppDev.FoundIT.entity.RewardEntity;
 import com.g4AppDev.FoundIT.entity.UserEntity;
+import com.g4AppDev.FoundIT.repository.RewardRepository;
 import com.g4AppDev.FoundIT.service.RewardService;
 import com.g4AppDev.FoundIT.service.UserService; // Add UserService if not already imported
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ public class RewardController {
 
     @Autowired
     private RewardService rewardService;
+    private RewardRepository rewardrepository;
     private RewardEntity rewardEntity;
     @Autowired
     private UserService userService; // Add UserService for user retrieval
@@ -30,7 +32,28 @@ public class RewardController {
         RewardEntity savedReward = rewardService.createReward(reward);
         return new ResponseEntity<>(savedReward, HttpStatus.CREATED);
     }
-    
+    //for updating isUsed to true, etc.
+
+    @PutMapping("/putReward1/{rewardId}")
+    public ResponseEntity<RewardEntity> updateReward1(
+    		@PathVariable Long rewardId,
+    	    @RequestBody RewardEntity updatedReward) {
+    	    Optional<RewardEntity> existingReward = rewardrepository.findById(rewardId);
+    	    if (existingReward.isPresent()) {
+    	    	RewardEntity reward = existingReward.get();
+    	        reward.setisUsed(updatedReward.getisUsed()); // Update the isUsed field
+
+    	        // Update associated User if needed
+    	        if (updatedReward.getUser() != null) {
+    	            reward.setUser(updatedReward.getUser());
+    	        }
+
+    	        rewardrepository.save(reward);
+    	        return ResponseEntity.ok(reward);
+    	    } else {
+    	        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    	    }
+    }
     /*
     @PostMapping("/postRewards")
     public RewardEntity createReward(@RequestBody RewardEntity reward) {
@@ -84,5 +107,10 @@ public class RewardController {
         Map<String, Long> counts = new HashMap<>();
         counts.put("user_count", rewardService.getRewardCount());
         return ResponseEntity.ok(counts);
+    }
+    
+    @GetMapping("/claimed-count")
+    public long getClaimedRewardsCount() {
+        return rewardService.getClaimedRewardsCount();
     }
 }

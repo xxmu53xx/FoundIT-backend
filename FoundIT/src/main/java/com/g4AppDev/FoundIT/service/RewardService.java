@@ -56,11 +56,14 @@ reward.setcouponCode(generateCouponCode());
         existingReward.setRewardType(updatedReward.getRewardType());
         existingReward.setUser(existingUser);
         existingReward.setisClaimed(updatedReward.getisClaimed());
+        existingReward.setisUsed(updatedReward.getisUsed());
         existingReward.setImage(updatedReward.getImage());
         return rewardRepository.save(existingReward);
     }
     
-    
+    public long getClaimedRewardsCount() {
+        return rewardRepository.countClaimedRewards();
+    }
     /*
     public void deleteReward(Long id) {
     	reward.setUser(null); 
